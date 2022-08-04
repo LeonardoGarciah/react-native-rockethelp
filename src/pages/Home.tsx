@@ -6,6 +6,7 @@ import { ChatTeardropText, SignOut } from 'phosphor-react-native';
 import { Filter } from '../components/Filter';
 import { Order, OrderProps } from '../components/Order';
 import { Button } from '../components/Button';
+import { useNavigation } from '@react-navigation/native';
 
 export function Home() {
   const [statusSelected,setStatusSelected] = useState<'open' | 'closed'>('open');
@@ -18,6 +19,16 @@ export function Home() {
 
 ]);
   const {colors} = useTheme();
+
+  const navigation = useNavigation();
+
+  const handleNewOrder = ()=>{
+    navigation.navigate('new')
+  }
+
+  const handleOpenDetails = (orderId: string)=>{
+    navigation.navigate('details',{orderId})
+  }
 
   return (
     <VStack flex={1} pb={6} bg="gray.700">
@@ -70,9 +81,9 @@ export function Home() {
                 </Text>
               </Center>
             )}
-            renderItem={({item})=> <Order data={item} />}
+            renderItem={({item})=> <Order data={item} onPress={()=>handleOpenDetails(item.id)}/>}
           />
-          <Button title='Nova solicitação'/>
+          <Button onPress={handleNewOrder} title='Nova solicitação'/>
         </VStack>
     </VStack>
   );
