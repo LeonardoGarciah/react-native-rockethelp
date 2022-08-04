@@ -2,10 +2,10 @@ import { NativeBaseProvider,StatusBar } from 'native-base';
 import React from "react";
 import { StyleSheet, Text, View} from 'react-native';
 import { useFonts, Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto'
-import SignIn from './src/pages/SignIn';
 
 import { THEME } from './src/styles/theme';
 import Loading from './src/components/Loading';
+import { Home } from './src/pages/Home';
 
 export default function App() {
   const [fontsLoaded] = useFonts({Roboto_400Regular, Roboto_700Bold})
@@ -18,7 +18,7 @@ export default function App() {
         translucent
       />
       {
-        fontsLoaded ? <SignIn/> : <Loading/>
+        fontsLoaded ? <Home/> : <Loading/>
       }
     </NativeBaseProvider>
   );
