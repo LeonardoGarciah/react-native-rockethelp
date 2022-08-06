@@ -84,7 +84,7 @@ export function Home() {
 
           <HStack w="full" mt={8} mb={4} justifyContent="space-between" alignItems="center">
             <Heading color="gray.100">Meus chamados</Heading>
-            <Text color="gray.200">3</Text>
+            <Text color="gray.200">{orders.length}</Text>
 
           </HStack>
 
