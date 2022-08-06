@@ -15,7 +15,7 @@ const SignIn = ()=>{
     const { colors } = useTheme();
 
     const handleSignIn = ()=>{
-      if(!email && !password){
+      if(!email || !password){
         Alert.alert("Login","Informe email ou senha")
       }
 
