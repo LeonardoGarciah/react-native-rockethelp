@@ -3,6 +3,7 @@ import { Heading, HStack, IconButton, StyledProps, useTheme } from 'native-base'
 import { CaretLeft } from 'phosphor-react-native';
 import { useNavigation } from '@react-navigation/native';
 
+
 type Props = StyledProps & {
   title: string;
 }

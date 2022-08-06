@@ -8,6 +8,9 @@ import { Order, OrderProps } from '../components/Order';
 import { Button } from '../components/Button';
 import { useNavigation } from '@react-navigation/native';
 
+import auth  from '@react-native-firebase/auth';
+import {Alert} from 'react-native';
+
 export function Home() {
   const [statusSelected,setStatusSelected] = useState<'open' | 'closed'>('open');
   const [orders,setOrders] = useState<OrderProps[]>([{
@@ -26,6 +29,16 @@ export function Home() {
     navigation.navigate('new')
   }
 
+  const handleSignOut = ()=>{
+    auth()
+    .signOut()
+    .catch((error)=>{
+      console.log(error);
+      return Alert.alert("Sair", "Não foi possivel sair.")
+    })
+    ;
+  }
+
   const handleOpenDetails = (orderId: string)=>{
     navigation.navigate('details',{orderId})
   }
@@ -42,7 +55,7 @@ export function Home() {
         px={6}
         >
           <Logo/>
-          <IconButton icon={<SignOut size={26} color={colors.gray[300]}/>} />
+          <IconButton onPress={handleSignOut} icon={<SignOut size={26} color={colors.gray[300]}/>} />
         </HStack>
 
         <VStack flex={1} px={6}>
