@@ -8,17 +8,22 @@ import { Order, OrderProps } from '../components/Order';
 import { Button } from '../components/Button';
 import { useNavigation } from '@react-navigation/native';
 
+import { useDispatch, useSelector } from 'react-redux';
+
 import firestore from '@react-native-firebase/firestore';
 import auth  from '@react-native-firebase/auth';
 import {Alert} from 'react-native';
 import { dateFormat } from '../utils/firestore-data-format';
 import Loading from '../components/Loading';
+import { RootState } from '../redux/store';
 
 export function Home() {
   const [isLoading,setIsLoading] = useState(true);
   const [statusSelected,setStatusSelected] = useState<'open' | 'closed'>('open');
   const [orders,setOrders] = useState<OrderProps[]>([]);
   const {colors} = useTheme();
+
+  const { role, userId } = useSelector((state: RootState) => state.auth)
 
   const navigation = useNavigation();
 

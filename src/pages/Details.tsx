@@ -12,6 +12,9 @@ import { CardDetails } from '../components/CardDetails';
 import Input from '../components/Input';
 import { Button } from '../components/Button';
 import { Alert } from 'react-native';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { Role } from '../enums/roles';
 
 
 type RouteParams = {
@@ -29,6 +32,9 @@ export function Details() {
   const [finishIsLoading,setFinishIsLoading] = useState(false);
   const [solution,setSolution] = useState("");
   const [order,setOrder] = useState<OrderDetails>({} as OrderDetails);
+
+  const { role, userId } = useSelector((state: RootState) => state.auth)
+
 
   const { colors } = useTheme();
   const route = useRoute();
@@ -56,8 +62,37 @@ export function Details() {
     .catch((error)=>{
       console.log(error);
     })
+  }
 
+  const handleDeleteOrder = ()=>{
+    return Alert.alert(
+      "Remover solicitação",
+      "Deseja realmente cancelar essa solicitação?",
+      [
+        // The "Yes" button
+        {
+          text: "SIM",
+          onPress: () => {
+            removeOrder();
+          },
+        },
+        // The "No" button
+        // Does nothing but dismiss the dialog when tapped
+        {
+          text: "NÃO",
+        },
+      ]
+    );
+  }
 
+  function removeOrder(){
+    firestore().collection('orders').doc(order.id).delete().then(()=>{
+      Alert.alert("Cancelar chamado", "Chamado cancelado com sucesso!")
+      navigation.navigate("home");
+    }).catch((error)=>{
+      
+      Alert.alert("Cancelar chamado", "Não foi possivel cancelar o chamado, tente novamente mais tarde!")
+    })
   }
 
   useEffect(()=>{
@@ -129,7 +164,7 @@ if(isLoading){
             footer={order.closed && `Encerrado em ${order.closed}`}
           >
             {
-              order.status === 'open' &&
+              order.status === 'open' && role === Role.TECH &&
               <Input
                 placeholder='Descrição da solução'
                 onChangeText={setSolution}
@@ -147,9 +182,9 @@ if(isLoading){
           !order.closed && 
           <Button 
           isLoading={finishIsLoading}
-          onPress={handleFinish}
+          onPress={ role === Role.TECH ? handleFinish : handleDeleteOrder}
           m={5}
-          title='ENCERRAR SOLICITAÇÃO'/>
+          title={ role === Role.TECH? 'ENCERRAR SOLICITAÇÃO' : 'CANCELAR SOLICITAÇÃO'}/>
         }
     </VStack>
   );

@@ -4,7 +4,6 @@ import auth from '@react-native-firebase/auth';
 import { Envelope, Key } from "phosphor-react-native";
 import React, { useState } from "react";
 
-import { setAuth }  from '../redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
 
 import firestore from '@react-native-firebase/firestore';
@@ -12,11 +11,11 @@ import firestore from '@react-native-firebase/firestore';
 import Logo from "../assets/logo_primary.svg";
 import { Button } from "../components/Button";
 import Input from "../components/Input";
+import { Role } from "../enums/roles";
 import { AppDispatch, RootState } from "../redux/store";
-import { useNavigation } from "@react-navigation/native"; 
-import { UserFirestoreDTO } from "../DTO/UserDTO";
+import { useNavigation } from "@react-navigation/native";
 
-const SignIn = ()=>{
+const SignUp = ()=>{
    const dispatch: AppDispatch = useDispatch();
 
    const navigate = useNavigation();
@@ -26,38 +25,40 @@ const SignIn = ()=>{
     const [password,setPassword] = useState("");
     const { colors } = useTheme();
 
-    const handleSignIn = ()=>{
-      if(!email || !password){
-        return Alert.alert("Login","Informe email ou senha")
-      }
-      setIsLoading(true);
-      auth().signInWithEmailAndPassword(email,password).then((response)=>{
-        getUserInfos(response.user.uid);
-      })
-      .catch((error)=>{
-        console.log(error);
-        Alert.alert("Entrar",checkErrorMessage(error.code));
-
-        setIsLoading(false)
-      })
-    }
-
-    const getUserInfos = ( id: string ) =>{
-      firestore()
-      .collection<UserFirestoreDTO>("users")
-      .where("userId", "==", id)
-      .get()
-      .then((doc)=>{
-        const {userId, role} = doc.docs[0].data();
-        dispatch(setAuth({ userId, role }));
-      })
+    const handleSignIn = () => {
+      navigate.goBack();
     }
 
     const handleSignUp = ()=>{
-      navigate.navigate('register');
+      if(!email || !password){
+        return Alert.alert("Registrar","Informe email ou senha")
+      }
+
+      setIsLoading(true);
+
+      auth().createUserWithEmailAndPassword(email,password).then((response)=>{
+        saveUserInFirestore(response);
+      })
+      .catch((error)=>{
+        console.log(error);
+        Alert.alert("Registrar",checkErrorMessage(error.code));
+
+      })
     }
 
-    function checkErrorMessage( error ){
+    const saveUserInFirestore = (response) =>{
+      firestore().collection("users").add({
+        userId: response.user.uid,
+        role: Role.CLIENT,
+        createdAt: response.user.metadata.creationTime
+      }).then((response)=>{
+        setIsLoading(false)
+      }).catch((error)=>{
+        Alert.alert("Registrar",checkErrorMessage(error.code));
+      })
+    }
+
+    function checkErrorMessage(error){
       if(error === "auth/user-not-found"){
         return "E-mail e/ou senha inválida!"
       }
@@ -92,17 +93,16 @@ const SignIn = ()=>{
             InputLeftElement={<Icon ml={4} as={<Key color={colors.gray[300]}/>} />}
             onChangeText={setPassword}
         />
-        <Button isLoading={isLoading} onPress={handleSignIn} title="Entrar" w={"full"}/>
-
-        <Button
-            bg={"transparent"}
+        <Button isLoading={isLoading} onPress={handleSignUp} title="Registrar"  w={"full"}/>
+        <Button 
+            bg={"transparent"} 
             borderColor={colors.secondary[700]} 
             borderWidth={1} 
-            title="Registrar-se" 
-            onPress={handleSignUp} 
+            onPress={handleSignIn} 
+            title="Entrar" 
+            mt={10} 
             w={"full"}
-            mt={10}
-         ></Button>
+        />
 
     </VStack>
 
@@ -111,4 +111,4 @@ const SignIn = ()=>{
 
 
 
-export default SignIn;
+export default SignUp;

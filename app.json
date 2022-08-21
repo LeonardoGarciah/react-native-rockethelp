@@ -12,11 +12,9 @@
     "android": {
       "package": "com.leonardogarciah.rockethelp",
       "googleServicesFile": "./google-services.json"
-    },
-    "ios":{
-      "bundleIdentifier": "com.leonardogarciah.rockethelp",
-      "googleServicesFile": "./GoogleService-Info.plist"
     }
+
+    
   },
   "name": "rockethelp"
 }
