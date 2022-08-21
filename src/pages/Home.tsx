@@ -12,20 +12,35 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import firestore from '@react-native-firebase/firestore';
 import auth  from '@react-native-firebase/auth';
-import {Alert} from 'react-native';
+import {Alert, RefreshControl} from 'react-native';
 import { dateFormat } from '../utils/firestore-data-format';
 import Loading from '../components/Loading';
 import { RootState } from '../redux/store';
+import { Role } from '../enums/roles';
+
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
 export function Home() {
   const [isLoading,setIsLoading] = useState(true);
   const [statusSelected,setStatusSelected] = useState<'open' | 'closed'>('open');
+  const [subFilter, setSubFilter] = useState<'all' | 'my'>('all');
   const [orders,setOrders] = useState<OrderProps[]>([]);
   const {colors} = useTheme();
 
   const { role, userId } = useSelector((state: RootState) => state.auth)
 
   const navigation = useNavigation();
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    wait(300).then(() => {
+      getDataFiltered()
+      setRefreshing(false)
+    });
+  }
 
   const handleNewOrder = ()=>{
     navigation.navigate('new')
@@ -45,14 +60,22 @@ export function Home() {
     navigation.navigate('details',{orderId})
   }
 
-  useEffect(()=>{
+  const getDataFiltered = () =>{
     setIsLoading(true);
-    const subscriber = firestore()
-    .collection("orders")
-    .where("status","==",statusSelected)
-    .onSnapshot(snapshot=>{
+    let query:any = firestore().collection("orders")
+    query = query.where("status", "==", statusSelected)
+
+    if( role === Role.CLIENT){
+      query = query.where("createdBy" , "==",  userId)
+    }
+
+    if( subFilter === 'my'){
+      query = query.where("solutionBy" , "==",  userId)
+    }
+
+    query.onSnapshot(snapshot=>{
       const data = snapshot.docs.map((doc)=>{
-        const {patrimony,description,status,created_at} = doc.data();
+        const {patrimony, description ,status ,created_at} = doc.data();
 
         return {
           id: doc.id,
@@ -65,10 +88,11 @@ export function Home() {
       setOrders(data)
       setIsLoading(false);
     })
+  }
 
-    return subscriber;
-
-  },[statusSelected])
+  useEffect(()=>{
+    return getDataFiltered();
+  },[statusSelected, subFilter])
 
   return (
     <VStack flex={1} pb={6} bg="gray.700">
@@ -92,6 +116,7 @@ export function Home() {
             <Text color="gray.200">{orders.length}</Text>
 
           </HStack>
+            <VStack>
 
           <HStack space={3} mb={8}>
             <Filter 
@@ -107,11 +132,36 @@ export function Home() {
               isActive={statusSelected === 'closed'}
             />
           </HStack>
+          {
+            (role === Role.TECH && statusSelected === "closed") && (
+          <HStack space={3} mb={8}>
+            <Filter 
+              type='all' 
+              title='TODOS' 
+              onPress={()=>setSubFilter('all')}
+              isActive={subFilter === 'all'}
+            />
+            <Filter 
+              type='my' 
+              title='MEUS CHAMADOS' 
+              onPress={()=>setSubFilter('my')}
+              isActive={subFilter === 'my'}
+            />
+          </HStack>
+            )
+          }
+            </VStack>
 {          
         (isLoading)?
         <Loading/>
         :
-        <FlatList 
+        <FlatList
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        } 
             data={orders} 
             keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}

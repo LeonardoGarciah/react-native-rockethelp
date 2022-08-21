@@ -6,11 +6,15 @@ import { Button } from '../components/Button';
 import { Alert } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 export function Register() {
   const [isLoading,setIsLoading] = useState(false);
   const [patrimony,setPatrimony] = useState("");
   const [description,setDescription] = useState("");
+
+  const { role, userId } = useSelector((state: RootState) => state.auth)
 
   const navigation = useNavigation();
 
@@ -24,7 +28,12 @@ export function Register() {
     firestore()
     .collection('orders')
     .add({
-      patrimony,description,status: 'open',created_at: firestore.FieldValue.serverTimestamp()
+      patrimony,
+      description,
+      status: 'open',
+      created_at: firestore.FieldValue.serverTimestamp(),
+      createdBy: userId,
+      solutionBy: ""
     })
     .then(()=>{
       Alert.alert("Solicitação","Solicitação registrada com sucesso!");

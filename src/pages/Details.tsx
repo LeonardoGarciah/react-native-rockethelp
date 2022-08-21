@@ -53,7 +53,8 @@ export function Details() {
     .update({
       status: "closed",
       solution,
-      closed_at: firestore.FieldValue.serverTimestamp()
+      closed_at: firestore.FieldValue.serverTimestamp(),
+      solutionBy: userId
     })
     .then(()=>{
       Alert.alert("Solicitação","Solicitação encerrada com sucesso!")
@@ -69,15 +70,12 @@ export function Details() {
       "Remover solicitação",
       "Deseja realmente cancelar essa solicitação?",
       [
-        // The "Yes" button
         {
           text: "SIM",
           onPress: () => {
             removeOrder();
           },
         },
-        // The "No" button
-        // Does nothing but dismiss the dialog when tapped
         {
           text: "NÃO",
         },
@@ -90,7 +88,6 @@ export function Details() {
       Alert.alert("Cancelar chamado", "Chamado cancelado com sucesso!")
       navigation.navigate("home");
     }).catch((error)=>{
-      
       Alert.alert("Cancelar chamado", "Não foi possivel cancelar o chamado, tente novamente mais tarde!")
     })
   }

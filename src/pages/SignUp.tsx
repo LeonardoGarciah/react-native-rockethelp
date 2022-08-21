@@ -14,6 +14,7 @@ import Input from "../components/Input";
 import { Role } from "../enums/roles";
 import { AppDispatch, RootState } from "../redux/store";
 import { useNavigation } from "@react-navigation/native";
+import { checkErrorMessage } from "../utils/firestore-error-validator";
 
 const SignUp = ()=>{
    const dispatch: AppDispatch = useDispatch();
@@ -56,22 +57,6 @@ const SignUp = ()=>{
       }).catch((error)=>{
         Alert.alert("Registrar",checkErrorMessage(error.code));
       })
-    }
-
-    function checkErrorMessage(error){
-      if(error === "auth/user-not-found"){
-        return "E-mail e/ou senha inválida!"
-      }
-
-      if(error === "auth/invalid-email"){
-        return "E-mail invalido!"
-      }
-
-      if(error === "auth/wrong-password"){
-        return "E-mail e/ou senha inválida!"
-      }
-
-      return "Não foi possivel acessar. Tente novamente mais tade!"
     }
 
   return(

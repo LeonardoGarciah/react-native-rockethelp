@@ -4,7 +4,7 @@ import { Button, IButtonProps, Text, useTheme } from 'native-base';
 type Props = IButtonProps & {
   title: string;
   isActive?: boolean;
-  type: 'open' | 'closed'
+  type: 'open' | 'closed' | 'all' | 'my'
 } 
 
 export function Filter({title,isActive = false,type, ...rest}: Props) {
