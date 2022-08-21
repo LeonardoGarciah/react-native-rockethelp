@@ -3,9 +3,10 @@ import { Button as ButtonNativeBase, IButtonProps, Heading } from 'native-base';
 
 type Props = IButtonProps & {
   title:  string;
+  btnColor?: string;
 }
 
-export function Button({ title, ...rest }: Props) {
+export function Button({ title, btnColor = "white", ...rest }: Props) {
   return (
     <ButtonNativeBase
     bg="green.700"
@@ -16,7 +17,7 @@ export function Button({ title, ...rest }: Props) {
       bg:"green.500"
     }}
     {...rest}>
-      <Heading color="white" fontSize="sm">
+      <Heading color={btnColor} fontSize="sm">
         { title }
       </Heading>
     </ButtonNativeBase>

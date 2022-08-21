@@ -81,7 +81,11 @@ const SignIn = ()=>{
 
         <Button
             bg={"transparent"}
-            borderColor={colors.secondary[700]} 
+            btnColor="purple.300"
+            borderColor="purple.500"
+            _pressed={{
+              bg:"purple.500"
+            }}
             borderWidth={1} 
             title="Registrar-se" 
             onPress={handleSignUp} 

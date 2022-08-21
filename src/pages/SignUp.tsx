@@ -81,11 +81,15 @@ const SignUp = ()=>{
         <Button isLoading={isLoading} onPress={handleSignUp} title="Registrar"  w={"full"}/>
         <Button 
             bg={"transparent"} 
-            borderColor={colors.secondary[700]} 
+            btnColor="purple.300"
+            borderColor="purple.500"
             borderWidth={1} 
             onPress={handleSignIn} 
             title="Entrar" 
             mt={10} 
+            _pressed={{
+              bg:"purple.500"
+            }}
             w={"full"}
         />
 
