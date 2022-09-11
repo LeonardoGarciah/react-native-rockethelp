@@ -16,8 +16,11 @@ import { AppDispatch, RootState } from "../redux/store";
 import { useNavigation } from "@react-navigation/native"; 
 import { UserFirestoreDTO } from "../DTO/UserDTO";
 import { checkErrorMessage } from "../utils/firestore-error-validator";
+import { useSelector } from "react-redux";
 
 const SignIn = ()=>{
+  const { deviceToken } = useSelector((state: RootState) => state.auth)
+
    const dispatch: AppDispatch = useDispatch();
 
    const navigate = useNavigation();
@@ -26,6 +29,20 @@ const SignIn = ()=>{
     const [isLoading,setIsLoading] = useState(false);
     const [password,setPassword] = useState("");
     const { colors } = useTheme();
+
+    const updateUserDevice = (userDocId: string) => {
+      console.log(userDocId);
+      firestore()
+      .collection("users")
+      .doc(userDocId)
+      .update({
+        deviceToken
+      })
+      .then()
+      .catch((error)=>{
+        console.log("updateUserDevice ",error);
+      })
+    }
 
     const handleSignIn = ()=>{
       if(!email || !password){
@@ -50,6 +67,8 @@ const SignIn = ()=>{
       .get()
       .then((doc)=>{
         const {userId, role} = doc.docs[0].data();
+        const docPath = doc.docs[0].ref.path.split("/")[1];
+        updateUserDevice(docPath);
         dispatch(setAuth({ userId, role }));
       })
     }

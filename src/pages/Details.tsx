@@ -43,7 +43,7 @@ export function Details() {
   const {orderId} = route.params as RouteParams;
 
   const handleFinish = ()=>{
-    if(!solution){
+    if (!solution) {
       return Alert.alert("Solicitação", "Informe uma solução para encerrar a solicitação!");
     }
     setFinishIsLoading(true);
