@@ -68,8 +68,8 @@ const SignIn = ()=>{
       .then((doc)=>{
         const {userId, role} = doc.docs[0].data();
         const docPath = doc.docs[0].ref.path.split("/")[1];
-        updateUserDevice(docPath);
         dispatch(setAuth({ userId, role }));
+        updateUserDevice(docPath);
       })
     }
 

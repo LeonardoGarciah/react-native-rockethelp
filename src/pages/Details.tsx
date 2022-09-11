@@ -15,6 +15,7 @@ import { Alert } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { Role } from '../enums/roles';
+import { sendNotification } from '../services/notification';
 
 
 type RouteParams = {
@@ -63,6 +64,8 @@ export function Details() {
     .catch((error)=>{
       console.log(error);
     })
+
+    sendNotification(order.id, order.createdBy);
   }
 
   const handleDeleteOrder = ()=>{
@@ -98,7 +101,8 @@ export function Details() {
     .doc(orderId)
     .get()
     .then((doc)=>{
-      const {patrimony,description,status,created_at,closed_at,solution} = doc.data();
+      const {patrimony, description, status,created_at, createdBy,closed_at, solution} = doc.data();
+
 
       const closed = closed_at ? dateFormat(closed_at) : null;
 
@@ -109,7 +113,8 @@ export function Details() {
         status,
         solution,
         when: dateFormat(created_at),
-        closed
+        closed,
+        createdBy
       })
 
       setIsLoading(false);
