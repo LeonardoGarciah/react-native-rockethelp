@@ -33,3 +33,4 @@ export const sendNotification = async (title, body, orderId: string, receiverId)
         console.log(error);
     }
 };
+

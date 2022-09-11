@@ -4,10 +4,13 @@ import PushNotification from "react-native-push-notification";
 import firestore from '@react-native-firebase/firestore';
 import { useDispatch } from 'react-redux';
 import { setDeviceToken } from '../redux/slices/authSlice';
+import { useNavigation } from '@react-navigation/native';
 
 const Notification = () => {
 
     const dispatch = useDispatch();
+
+    const navigation = useNavigation();
 
     PushNotification.configure({
         onRegister: function (token) {
@@ -16,7 +19,11 @@ const Notification = () => {
         },
 
         onNotification: function (notification) {
-          console.log("NOTIFICATION:", notification);
+          console.log("NOTIFICATION ON NOTIFICATION:", notification);
+          if (notification.userInteraction) {
+            const orderId =  notification.data.orderId;
+            navigation.navigate('details', { orderId });
+          }
 
           notification.finish(PushNotificationIOS.FetchResult.NoData);
         },
