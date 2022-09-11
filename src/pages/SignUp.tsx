@@ -21,40 +21,40 @@ const SignUp = ()=>{
 
    const navigate = useNavigation();
 
-    const [email,setEmail] = useState("");
-    const [isLoading,setIsLoading] = useState(false);
-    const [password,setPassword] = useState("");
+    const [ email,setEmail ] = useState("");
+    const [ isLoading,setIsLoading ] = useState(false);
+    const [ password,setPassword ] = useState("");
     const { colors } = useTheme();
 
     const handleSignIn = () => {
       navigate.goBack();
     }
 
-    const handleSignUp = ()=>{
-      if(!email || !password){
+    const handleSignUp = () => {
+      if (!email || !password) {
         return Alert.alert("Registrar","Informe email ou senha")
       }
 
       setIsLoading(true);
 
-      auth().createUserWithEmailAndPassword(email,password).then((response)=>{
+      auth().createUserWithEmailAndPassword(email,password).then( (response) => {
         saveUserInFirestore(response);
       })
-      .catch((error)=>{
+      .catch( (error) => {
         console.log(error);
         Alert.alert("Registrar",checkErrorMessage(error.code));
 
       })
     }
 
-    const saveUserInFirestore = (response) =>{
+    const saveUserInFirestore = (response) => {
       firestore().collection("users").add({
         userId: response.user.uid,
         role: Role.CLIENT,
         createdAt: response.user.metadata.creationTime
-      }).then((response)=>{
+      }).then( () => {
         setIsLoading(false)
-      }).catch((error)=>{
+      }).catch( (error) => {
         Alert.alert("Registrar",checkErrorMessage(error.code));
       })
     }
@@ -97,7 +97,5 @@ const SignUp = ()=>{
 
   );
 }
-
-
 
 export default SignUp;

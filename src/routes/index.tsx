@@ -10,10 +10,10 @@ import { SignRoutes } from './sign.route';
 import Notification from '../lib/Notification';
 
 export function Routes(){
-  const [isLoading,setIsLoading] = useState(true);
-  const [user, setUser] = useState<FirebaseAuthTypes.User>();
+  const [ isLoading, setIsLoading ] = useState(true);
+  const [ user, setUser ] = useState<FirebaseAuthTypes.User>();
 
-  useEffect(()=>{
+  useEffect( () => {
     const subscribe = auth()
     .onAuthStateChanged(response =>{
       setUser(response)
@@ -23,7 +23,7 @@ export function Routes(){
     return subscribe;
   },[])
 
-  if(isLoading){
+  if ( isLoading ) {
     return <Loading/>
   }
 
@@ -31,7 +31,7 @@ export function Routes(){
     <NavigationContainer>
       <Notification/>
       {
-        user ? <AppRoutes/> :<SignRoutes/>
+        user ? <AppRoutes/> : <SignRoutes/>
       }
     </NavigationContainer>
   )

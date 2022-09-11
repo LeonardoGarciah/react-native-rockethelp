@@ -14,12 +14,12 @@ export function Register() {
   const [patrimony,setPatrimony] = useState("");
   const [description,setDescription] = useState("");
 
-  const { role, userId } = useSelector((state: RootState) => state.auth)
+  const { userId } = useSelector((state: RootState) => state.auth)
 
   const navigation = useNavigation();
 
-  const handleNewOrder = ()=>{
-    if(!patrimony || !description){
+  const handleNewOrder = () => {
+    if (!patrimony || !description) {
       return Alert.alert("Registrar", "Preencha todos os campos.");
     }
 
@@ -35,11 +35,11 @@ export function Register() {
       createdBy: userId,
       solutionBy: ""
     })
-    .then(()=>{
+    .then( () => {
       Alert.alert("Solicitação","Solicitação registrada com sucesso!");
       navigation.goBack();
     })
-    .catch((error)=>{
+    .catch( (error) => {
       console.log(error);
       setIsLoading(false);
       return Alert.alert("Solicitação", "Não foi possivel registrar o pedido!")
