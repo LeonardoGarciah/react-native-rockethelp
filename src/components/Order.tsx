@@ -6,7 +6,8 @@ export type OrderProps = {
   id: string;
   patrimony: string,
   when: string,
-  status: 'open' | 'closed'
+  status: 'open' | 'closed',
+  createdBy: string
 }
 
 type Props = IPressableProps & {

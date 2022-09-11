@@ -7,6 +7,7 @@ import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import { AppRoutes } from './app.routes'
 import Loading from '../components/Loading';
 import { SignRoutes } from './sign.route';
+import Notification from '../lib/Notification';
 
 export function Routes(){
   const [isLoading,setIsLoading] = useState(true);
@@ -28,6 +29,7 @@ export function Routes(){
 
   return(
     <NavigationContainer>
+      <Notification/>
       {
         user ? <AppRoutes/> :<SignRoutes/>
       }
