@@ -29,10 +29,10 @@ type OrderDetails = OrderProps & {
 }
 
 export function Details() {
-  const [isLoading,setIsLoading] = useState(true);
-  const [finishIsLoading,setFinishIsLoading] = useState(false);
-  const [solution,setSolution] = useState("");
-  const [order,setOrder] = useState<OrderDetails>({} as OrderDetails);
+  const [ isLoading,setIsLoading ] = useState(true);
+  const [ finishIsLoading,setFinishIsLoading ] = useState(false);
+  const [ solution,setSolution ] = useState("");
+  const [ order,setOrder ] = useState<OrderDetails>({} as OrderDetails);
 
   const { role, userId } = useSelector((state: RootState) => state.auth)
 
@@ -43,7 +43,7 @@ export function Details() {
 
   const {orderId} = route.params as RouteParams;
 
-  const handleFinish = ()=>{
+  const handleFinish = () => {
     if (!solution) {
       return Alert.alert("Solicitação", "Informe uma solução para encerrar a solicitação!");
     }
@@ -68,7 +68,7 @@ export function Details() {
     sendNotification("Chamado atendido", `Seu chamado ${order.patrimony} foi atendido`, order.id, order.createdBy);
   }
 
-  const handleDeleteOrder = ()=>{
+  const handleDeleteOrder = () => {
     return Alert.alert(
       "Remover solicitação",
       "Deseja realmente cancelar essa solicitação?",
@@ -95,15 +95,13 @@ export function Details() {
     })
   }
 
-  useEffect(()=>{
+  useEffect( () => {
     firestore()
     .collection<OrderFirestoreDTO>("orders")
     .doc(orderId)
     .get()
     .then((doc)=>{
       const {patrimony, description, status,created_at, createdBy,closed_at, solution} = doc.data();
-
-
       const closed = closed_at ? dateFormat(closed_at) : null;
 
       setOrder({
@@ -121,7 +119,7 @@ export function Details() {
     })
   },[])
 
-if(isLoading){
+if (isLoading) {
   return <Loading/>
 }
 
@@ -147,33 +145,33 @@ if(isLoading){
         </HStack>
         <ScrollView mx={5} showsVerticalScrollIndicator={false}>
           <CardDetails 
-            title='Equipamento' 
-            description={`Patrimonio ${order.patrimony}`}
-            icon={DesktopTower}
-            footer={order.when}
+                title='Equipamento' 
+                description={`Patrimonio ${order.patrimony}`}
+                icon={DesktopTower}
+                footer={order.when}
           />
 
         <CardDetails 
-            title='Descriçao do problema' 
-            description={order.description}
-            icon={Clipboard}
+                title='Descriçao do problema' 
+                description={order.description}
+                icon={Clipboard}
           />
 
           <CardDetails 
-            title='Solução' 
-            icon={CircleWavyCheck}
-            description={order.solution}
-            footer={order.closed && `Encerrado em ${order.closed}`}
+                title='Solução' 
+                icon={CircleWavyCheck}
+                description={order.solution}
+                footer={order.closed && `Encerrado em ${order.closed}`}
           >
             {
               order.status === 'open' && role === Role.TECH &&
               <Input
-                placeholder='Descrição da solução'
-                onChangeText={setSolution}
-                h={24}
-                textAlignVertical="top"
-                multiline
-                bg="gray.600"
+                    placeholder='Descrição da solução'
+                    onChangeText={setSolution}
+                    h={24}
+                    textAlignVertical="top"
+                    multiline
+                    bg="gray.600"
               />
 
             }
@@ -183,10 +181,11 @@ if(isLoading){
         {
           !order.closed && 
           <Button 
-          isLoading={finishIsLoading}
-          onPress={ role === Role.TECH ? handleFinish : handleDeleteOrder}
-          m={5}
-          title={ role === Role.TECH? 'ENCERRAR SOLICITAÇÃO' : 'CANCELAR SOLICITAÇÃO'}/>
+                isLoading={finishIsLoading}
+                onPress={ role === Role.TECH ? handleFinish : handleDeleteOrder}
+                m={5}
+                title={ role === Role.TECH? 'ENCERRAR SOLICITAÇÃO' : 'CANCELAR SOLICITAÇÃO'}
+          />
         }
     </VStack>
   );

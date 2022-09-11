@@ -2,7 +2,7 @@ import firestore from '@react-native-firebase/firestore';
 import axios from 'axios';
 import { UserFirestoreDTO } from '../DTO/UserDTO';
 
-const getUserDevice = (userId) => {
+const getUserDevice = async (userId: string) => {
     return firestore()
         .collection<UserFirestoreDTO>('users')
         .where('userId', '==', userId)
@@ -13,7 +13,7 @@ const getUserDevice = (userId) => {
         });
 };
 
-export const sendNotification = async (title, body, orderId: string, receiverId) => {
+export const sendNotification = async (title: string, body: string, orderId: string, receiverId: string) => {
     const deviceReceiverToken = await getUserDevice(receiverId);
     try {
         await axios

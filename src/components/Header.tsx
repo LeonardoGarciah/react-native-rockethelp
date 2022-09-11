@@ -8,12 +8,12 @@ type Props = StyledProps & {
   title: string;
 }
 
-export function Header({title, ...rest}: Props) {
+export function Header({ title, ...rest }: Props) {
 
   const navigation = useNavigation();
   const { colors } = useTheme();
 
-  const handleBackScreen = ()=>{
+  const handleBackScreen = () => {
     navigation.goBack();
   }
 
@@ -26,10 +26,14 @@ export function Header({title, ...rest}: Props) {
     pt={12}
     {...rest}
     >
-      <IconButton onPress={handleBackScreen} icon={<CaretLeft color={colors.gray[200]} size={24}/>}/>
+      <IconButton onPress={handleBackScreen} 
+            icon={
+                <CaretLeft color={colors.gray[200]} size={24}/>
+            }
+        />
     
     <Heading color="gray.100" textAlign="center" fontSize="lg" flex={1} ml={-6}>
-      {title}
+      { title }
     </Heading>
 
     </HStack>

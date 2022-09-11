@@ -23,10 +23,10 @@ const wait = (timeout) => {
 };
 
 export function Home() {
-    const [isLoading, setIsLoading] = useState(true);
-    const [statusSelected, setStatusSelected] = useState<'open' | 'closed'>('open');
-    const [subFilter, setSubFilter] = useState<'all' | 'my'>('all');
-    const [orders, setOrders] = useState<OrderProps[]>([]);
+    const [ isLoading, setIsLoading ] = useState(true);
+    const [ statusSelected, setStatusSelected ] = useState<'open' | 'closed'>('open');
+    const [ subFilter, setSubFilter ] = useState<'all' | 'my'>('all');
+    const [ orders, setOrders ] = useState<OrderProps[]>([]);
     const { colors } = useTheme();
 
     const { role, userId } = useSelector((state: RootState) => state.auth);

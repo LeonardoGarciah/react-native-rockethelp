@@ -18,41 +18,41 @@ import { UserFirestoreDTO } from "../DTO/UserDTO";
 import { checkErrorMessage } from "../utils/firestore-error-validator";
 import { useSelector } from "react-redux";
 
-const SignIn = ()=>{
+const SignIn = () => {
   const { deviceToken } = useSelector((state: RootState) => state.auth)
 
    const dispatch: AppDispatch = useDispatch();
 
    const navigate = useNavigation();
 
-    const [email,setEmail] = useState("");
-    const [isLoading,setIsLoading] = useState(false);
-    const [password,setPassword] = useState("");
+    const [ email,setEmail ] = useState("");
+    const [ isLoading,setIsLoading ] = useState(false);
+    const [ password,setPassword ] = useState("");
     const { colors } = useTheme();
 
     const updateUserDevice = (userDocId: string) => {
-      console.log(userDocId);
       firestore()
       .collection("users")
       .doc(userDocId)
       .update({
         deviceToken
       })
-      .then()
-      .catch((error)=>{
+      .catch( (error) => {
         console.log("updateUserDevice ",error);
       })
     }
 
-    const handleSignIn = ()=>{
-      if(!email || !password){
+    const handleSignIn = () => {
+      if (!email || !password) {
         return Alert.alert("Login","Informe email ou senha")
       }
+
       setIsLoading(true);
+
       auth().signInWithEmailAndPassword(email,password).then((response)=>{
         getUserInfos(response.user.uid);
       })
-      .catch((error)=>{
+      .catch( (error) => {
         console.log(error);
         Alert.alert("Entrar",checkErrorMessage(error.code));
 
@@ -60,20 +60,21 @@ const SignIn = ()=>{
       })
     }
 
-    const getUserInfos = ( id: string ) =>{
+    const getUserInfos = ( id: string ) => {
       firestore()
       .collection<UserFirestoreDTO>("users")
       .where("userId", "==", id)
       .get()
-      .then((doc)=>{
+      .then( (doc) => {
         const {userId, role} = doc.docs[0].data();
         const docPath = doc.docs[0].ref.path.split("/")[1];
+
         dispatch(setAuth({ userId, role }));
         updateUserDevice(docPath);
       })
     }
 
-    const handleSignUp = ()=>{
+    const handleSignUp = () => {
       navigate.navigate('register');
     }
 
