@@ -65,7 +65,7 @@ export function Details() {
       console.log(error);
     })
 
-    sendNotification(order.id, order.createdBy);
+    sendNotification("Chamado atendido", `Seu chamado ${order.patrimony} foi atendido`, order.id, order.createdBy);
   }
 
   const handleDeleteOrder = ()=>{

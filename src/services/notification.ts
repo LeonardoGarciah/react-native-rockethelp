@@ -13,13 +13,15 @@ const getUserDevice = (userId) => {
         });
 };
 
-export const sendNotification = async (orderId: string, receiverId) => {
+export const sendNotification = async (title, body, orderId: string, receiverId) => {
     const deviceReceiverToken = await getUserDevice(receiverId);
     try {
         await axios
             .post('http://192.168.0.9:3000/notifications', {
-                orderId: orderId,
-                deviceReceiverToken: deviceReceiverToken,
+                title,
+                body,
+                orderId,
+                deviceReceiverToken
             })
             .then((resp) => {
                 console.log(resp);
